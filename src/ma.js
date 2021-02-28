@@ -36,7 +36,7 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
     console.log("Bot Online!");
-    client.user.setActivity(`new users.`, {
+    client.user.setActivity(`over the server.`, {
         type: "WATCHING"
     });
 });
@@ -50,7 +50,6 @@ client.on('guildMemberAdd', (member) => {
     const d3 = d1.split(' ')
 
     const embed = new Discord.MessageEmbed()
-        .setDescription(`Welcome ${member}, please read our <#800125312888864799> and check out <#799438801779949588> to get started.`)
         .setTitle(`New User: ${member.user.tag}`)
         .addFields({
             name: 'Account Registered',
@@ -68,11 +67,19 @@ client.on('guildMemberAdd', (member) => {
         }))
         .setTimestamp();
 
-    const channel = member.guild.channels.cache.get('800996683193384990')
+    const channel = member.guild.channels.cache.get('811124554884972564')
     return channel.send(embed);
 })
 
 let prefix = config.prefix;
+
+client.on('message', message => {
+    if (message.channel.id === '811003528373993515') {
+        if (message.author.id == '811003233165115423') return;
+        if (message.author.bot) return;
+        if (!message.content.includes(">verify")) return message.delete();
+    }
+})
 
 client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -94,7 +101,7 @@ client.on('message', async message => {
     }
 
     try {
-        command.execute(message, args, bot);
+        command.execute(message, args);
     } catch (error) {
 
         console.error(error);

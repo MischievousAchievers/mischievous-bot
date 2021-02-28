@@ -5,47 +5,56 @@ module.exports = {
     description: 'Open a new ticket',
     async execute(message, args) {
         async function newTicket() {
-            if (message.guild.channels.cache.some(channel => channel.name === "ticket-" + message.author.id)) return message.channel.send(`You already have a ticket open.`);
+            if (message.guild.channels.cache.some(channel => channel.name === "verify-" + message.author.id)) return message.channel.send(`${message.member} You already have a ticket open.`);
             const ticketName = `verify-${message.author.id}`;
 
             await message.guild.channels.create(ticketName, {
                 type: 'text',
-                permissionOverwrites: [{
-                        allow: 'VIEW_CHANNEL',
-                        id: message.author.id
-                    },
+                permissionOverwrites: [
                     // Leader
                     {
                         allow: 'VIEW_CHANNEL',
-                        id: '800678192268312606',
+                        id: '811139995321630733',
                     },
                     // Moderator
                     {
                         allow: 'VIEW_CHANNEL',
-                        id: '802659259300053003',
+                        id: '811140029212524604',
                     },
                     // Bot
                     {
                         allow: 'VIEW_CHANNEL',
-                        id: '799108249205997599',
+                        id: '811120769836908574',
                     },
                     {
                         deny: 'VIEW_CHANNEL',
                         id: message.guild.id
-                    }
+                    }, {
+                        allow: 'VIEW_CHANNEL',
+                        id: message.author.id
+                    },
                 ]
             });
 
             const embed = new Discord.MessageEmbed()
-                .setTitle(`${message.author.username}\'s Ticket`)
-                .setDescription("Hello! Please provide a screenshot of a your hacked client (with your username visible in the same screenshot) and a photo of you MC Launcher or proof that you are verified in another sublegion to be verified!")
+                .setTitle(`${message.author.username}\'s Verification`)
+                .setDescription("Please provide the information below.")
+                .addFields({
+                    name: "Question 1",
+                    value: "What is your Matrix username?",
+                }, {
+                    name: "Question 2",
+                    value: "Why do you want access to our voice channels?",
+                })
 
             const ticketChannel = message.guild.channels.cache.find(ch => ch.name === ticketName);
+            await ticketChannel.send(`<@${message.author.id}>`);
             ticketChannel.send(embed);
 
             message.channel.send(`<@${message.author.id}> <#${ticketChannel.id}>`);
 
         }
+        message.delete();
         newTicket();
     }
 }
